@@ -10,7 +10,7 @@ on:
       - main
 
 jobs:
-  build:
+  backend:
 
     runs-on: windows-latest
 
@@ -33,4 +33,32 @@ jobs:
       with:
           name: backend-test-result
           path: ${{ github.workspace }}/back/target/site/jacoco/jacoco.xml
+
+
+  
+  frontend:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.x
+
+      - name: Build and test project
+        run: |
+          npm ci
+          npm run build --if-present
+          npm run test:prod
+        working-directory: ${{ github.workspace }}/front
+
+      - name: Upload frontend test results as artifact
+        uses: actions/upload-artifact@v4 # upload test results
+        if: success() || failure() # run this step even if previous step failed
+        with:
+          name: frontend-test-result
+          path: ${{ github.workspace }}/front/coverage/bobapp/index.html
   
