@@ -2,58 +2,66 @@ name: Build and Deploy Docker Containers
 
 on:
   push:
-      branches:
+    branches:
       - main
   pull_request_review:
-      branches:
+    branches:
       - main
-      types: [submitted]
+    types: [submitted]
+
 jobs:
   docker-frontend:
     if: github.event.review.state == 'approved' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: windows-latest
     steps:
-      -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      -
-        name: Set up Docker Buildx
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      -
-        name: Login to Docker Hub
+        with:
+          driver: docker
+          install: true
+        
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
-      -
-        name: Build and push
+          
+      - name: Build and push frontend
         uses: docker/build-push-action@v5
         with:
-          context: "{{defaultContext}}:front"
+          context: ./front
           push: true
           tags: sv3ngali75/ocr_dev_fullstack_p10:frontend
-
+          platforms: windows-amd64
+          builder: ${{ steps.buildx.outputs.name }}
 
   docker-backend:
     if: github.event.review.state == 'approved' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: windows-latest
     steps:
-      -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      -
-        name: Set up Docker Buildx
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      -
-        name: Login to Docker Hub
+        with:
+          driver: docker
+          install: true
+        
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Build and push
+          
+      - name: Build and push backend
         uses: docker/build-push-action@v5
         with:
-          context: "{{defaultContext}}:back"
+          context: ./back
           push: true
           tags: sv3ngali75/ocr_dev_fullstack_p10:backend
+          platforms: windows-amd64
+          builder: ${{ steps.buildx.outputs.name }}
