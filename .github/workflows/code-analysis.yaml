@@ -38,8 +38,8 @@ jobs:
           
       - name: Build and analyze
         env:
-          #GITHUB_TOKEN: ${{ secrets.GITH_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Diengsalla1990_Gerez-un-projet-collaboratif-en-int-grant-une-demarche-CI-CD
         working-directory: ${{github.workspace}}/back
           
@@ -69,5 +69,5 @@ jobs:
         with:
           projectBaseDir: front
         env:
-          # GITHUB_TOKEN: ${{ secrets.GITH_TOKEN }}  # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
