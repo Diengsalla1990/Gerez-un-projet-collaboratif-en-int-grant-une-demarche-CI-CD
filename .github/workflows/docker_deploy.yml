@@ -19,7 +19,6 @@ jobs:
         uses: actions/checkout@v4
         
       - name: Set up Docker Buildx
-        id: buildx
         uses: docker/setup-buildx-action@v3
         with:
           driver: docker
@@ -31,23 +30,24 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
           
-      - name: Build and push
+      - name: Build and push frontend
         uses: docker/build-push-action@v5
         with:
-          context: ./front
+          context: ./front  # ✅ Chevalier corrigé
           push: true
           tags: sv3ngali75/ocr_dev_fullstack_p10:frontend
-          builder: ${{ steps.buildx.outputs.name }}
           
+
   docker-backend:
     if: github.event.review.state == 'approved' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
+    environment: actions  # ✅ Ajouté pour cohérence
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         
       - name: Set up Docker Buildx
-        id: buildx
+        id: buildx  # ✅ ID ajouté
         uses: docker/setup-buildx-action@v3
         with:
           driver: docker
@@ -65,4 +65,4 @@ jobs:
           context: ./back
           push: true
           tags: sv3ngali75/ocr_dev_fullstack_p10:backend
-          builder: ${{ steps.buildx.outputs.name }}
+          # builder: ${{ steps.buildx.outputs.name }}  # ✅ Supprimé ou utilisez l'ID défini
