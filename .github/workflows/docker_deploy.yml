@@ -35,7 +35,7 @@ jobs:
         with:
           context: ./front  # ✅ Chevalier corrigé
           push: true
-          tags: sv3ngali75/ocr_dev_fullstack_p10:frontend
+          tags: diengsalla/ocr_dev_fullstack_p10:frontend
           
 
   docker-backend:
@@ -64,5 +64,5 @@ jobs:
         with:
           context: ./back
           push: true
-          tags: sv3ngali75/ocr_dev_fullstack_p10:backend
-          # builder: ${{ steps.buildx.outputs.name }}  # ✅ Supprimé ou utilisez l'ID défini
+          tags: diengsalla/ocr_dev_fullstack_p10:backend
+          
