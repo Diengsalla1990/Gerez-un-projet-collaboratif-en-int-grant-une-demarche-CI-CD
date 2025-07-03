@@ -33,7 +33,7 @@ jobs:
       - name: Build and push frontend
         uses: docker/build-push-action@v5
         with:
-          context: ./front  # ✅ Chevalier corrigé
+          context: ./front 
           push: true
           tags: diengsalla/ocr_dev_fullstack_p10:frontend
           
@@ -41,13 +41,13 @@ jobs:
   docker-backend:
     if: github.event.review.state == 'approved' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
-    environment: actions  # ✅ Ajouté pour cohérence
+    environment: actions  
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         
       - name: Set up Docker Buildx
-        id: buildx  # ✅ ID ajouté
+        id: buildx  
         uses: docker/setup-buildx-action@v3
         with:
           driver: docker
